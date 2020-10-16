@@ -13,6 +13,7 @@ var (
 func ReadConfig() error {
 	err := godotenv.Load()
 	if err != nil {
+		log.Print(err)
 		log.Fatal("Error loading .env file")
 	}
 
