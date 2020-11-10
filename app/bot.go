@@ -3,13 +3,16 @@ package app
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
-	"github.com/jibe0123/discordBot/config"
+	"github.com/jibe0123/discordBot/commands/foot"
+	"github.com/jibe0123/discordBot/commands/ping"
+	"log"
+	"strings"
 )
 
 var BotID string
 
-func Start() *discordgo.Session {
-	goBot, err := discordgo.New("Bot " + config.Token)
+func Start(token string) *discordgo.Session {
+	goBot, err := discordgo.New("Bot " + token)
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -44,6 +47,15 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	if m.Content == "ping" {
-		_, _ = s.ChannelMessageSend(m.ChannelID, "pong")
+		pingCommand := ping.MakePingCommand(s, m)
+		pingCommand.Execute()
 	}
+
+	if strings.HasPrefix(m.Content, "!foot") {
+		log.Print(strings.Fields(m.Content))
+		footCommand := foot.GetLastCompetitionsCommand(s, m)
+		footCommand.Execute()
+
+	}
+
 }

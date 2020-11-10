@@ -1,23 +1,35 @@
 package main
 
 import (
-	"fmt"
+	"flag"
+	"github.com/caarlos0/env/v6"
 	"github.com/jibe0123/discordBot/app"
-	"github.com/jibe0123/discordBot/config"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 )
 
-func main() {
-	err := config.ReadConfig()
+// Variables used for command line parameters
+var (
+	Token string
+)
 
-	if err != nil {
-		fmt.Println(err.Error())
+func init() {
+	flag.StringVar(&Token, "t", "", "Bot Token")
+	flag.Parse()
+}
+
+type DiscordConfig struct {
+	Token string `env:"TOKEN_DISCORD"`
+}
+
+func main() {
+	dsConfig := DiscordConfig{}
+	if err := env.Parse(&dsConfig); err != nil {
 		return
 	}
-	goBot := app.Start()
+	goBot := app.Start(dsConfig.Token)
 
 	// Wait here until CTRL-C or other term signal is received.
 	log.Print("Bot is now running.  Press CTRL-C to exit.")
@@ -26,9 +38,9 @@ func main() {
 	<-sc
 	log.Println("Shutting down server...")
 
-	err = goBot.Close()
-	if err != nil {
+	if err := goBot.Close(); err != nil {
 		log.Print(err)
+		return
 	}
 	log.Println("Server exiting")
 }

@@ -26,8 +26,8 @@ services:
       MYSQL_PASSWORD: gobot
       MYSQL_DATABASE: gobot-pwd
       DB_HOST: tcp(db:3306)
-      TOKEN_DISCORD: NzY2NTc5MTc2ODY5NTkzMDk4.X4lafg.Eo63iGZr0_Jv7w4NKEXIPWdpxug
-      API_KEY: 314f71221e0b4f75b7e394e2f5b93b9e
+      TOKEN_DISCORD: "${TOKEN_DISCORD}"
+      API_KEY: "${TOKEN_DISCORD}"
     volumes:
       - ./:/go:rw
     networks:
